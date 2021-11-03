@@ -1,0 +1,9 @@
+nohup: ignoring input
+Traceback (most recent call last):
+  File "hcp_atlas_to_atlas.py", line 11, in <module>
+    import ot
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/ot/__init__.py", line 25, in <module>
+    from . import lp
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/ot/lp/__init__.py", line 20, in <module>
+    from .emd_wrap import emd_c, check_result, emd_1d_sorted
+ImportError: /lib64/libc.so.6: version `GLIBC_2.14' not found (required by /home/javid/anaconda2/lib/python2.7/site-packages/ot/lp/emd_wrap.so)

@@ -1,0 +1,14 @@
+nohup: ignoring input
+Loading Atlases ..:   0%|          | 0/2 [00:00<?, ?it/s]Loading Atlases ..:   0%|          | 0/2 [00:00<?, ?it/s]
+[0 3 7 1 5 4 2 6]
+[2 3 0 7 5 4 6 1]
+Traceback (most recent call last):
+  File "hcp_atlas_to_atlas.py", line 149, in <module>
+    data = sio.loadmat(os.path.join(path,atlas,task+'.mat'))
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/scipy/io/matlab/mio.py", line 207, in loadmat
+    MR, file_opened = mat_reader_factory(file_name, appendmat, **kwargs)
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/scipy/io/matlab/mio.py", line 62, in mat_reader_factory
+    byte_stream, file_opened = _open_file(file_name, appendmat)
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/scipy/io/matlab/mio.py", line 37, in _open_file
+    return open(file_like, 'rb'), True
+IOError: [Errno 2] No such file or directory: '/data_dustin/store4/Templates/HCP/shen/language.mat'

@@ -1,0 +1,21 @@
+nohup: ignoring input
+Loading Atlases ..:   0%|          | 0/6 [00:00<?, ?it/s]Loading Atlases ..:  17%|█▋        | 1/6 [01:58<09:53, 118.68s/it]Loading Atlases ..:  33%|███▎      | 2/6 [03:22<07:13, 108.33s/it]Loading Atlases ..:  50%|█████     | 3/6 [07:34<07:33, 151.22s/it][3 5 4 1 2 0]
+[3 5 0 2 4 1]
+Traceback (most recent call last):
+  File "hcp_atlas_to_atlas.py", line 144, in <module>
+    data = sio.loadmat(os.path.join(path,atlas,task+'.mat'))
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/scipy/io/matlab/mio.py", line 208, in loadmat
+    matfile_dict = MR.get_variables(variable_names)
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/scipy/io/matlab/mio5.py", line 292, in get_variables
+    res = self.read_var_array(hdr, process)
+  File "/home/javid/anaconda2/lib/python2.7/site-packages/scipy/io/matlab/mio5.py", line 252, in read_var_array
+    return self._matrix_reader.array_from_header(header, process)
+  File "mio5_utils.pyx", line 675, in scipy.io.matlab.mio5_utils.VarReader5.array_from_header
+  File "mio5_utils.pyx", line 705, in scipy.io.matlab.mio5_utils.VarReader5.array_from_header
+  File "mio5_utils.pyx", line 778, in scipy.io.matlab.mio5_utils.VarReader5.read_real_complex
+  File "mio5_utils.pyx", line 450, in scipy.io.matlab.mio5_utils.VarReader5.read_numeric
+  File "mio5_utils.pyx", line 355, in scipy.io.matlab.mio5_utils.VarReader5.read_element
+  File "streams.pyx", line 331, in scipy.io.matlab.streams.FileStream.read_string
+  File "pyalloc.pxd", line 9, in scipy.io.matlab.pyalloc.pyalloc_v
+MemoryError
+Loading Atlases ..:  50%|█████     | 3/6 [07:47<07:47, 155.85s/it]
