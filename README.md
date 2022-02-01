@@ -5,6 +5,8 @@
 This is the repository for CAROT, ross Atlas Remapping via Optimal Transport. All the data including `mappings`, `intrinsic evluation`, and `downstream analysis` are in `data/` folder.
 
 
+![alt text](ai/ot.jpg)
+
 ## Creating mappings 
 The main code to create mappings, connectomes in a desired atlas, and testing is available in `hcp_atlas_to_atlas.py`.
 The following arguments are needed to call the script:
