@@ -28,10 +28,21 @@ The following arguments are needed to call the script:
 10. `-save_model` or `--save_model`: (True or False)
 
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
-
 ```console
 python hcp_atlas_to_atlas.py -s brainnetome -t shen -task rest1 --save_model True -c euclidean
 ```
+ 
+To run the main CAROT pipeline with `all` available atlases into `shen`:
+```console
+python hcp_atlas_to_atlas.py -s all -t shen -task rest1 -simplex 2 -sample_atlas 0
+```
 
+To run identification pipeline between estimated connectomes and databases `rest`` and `rest2` in HCP dataset:
+```console
+python hcp_atlas_to_atlas.py -t power -s all -id True  -id_direction orig-ot
+```
 
-## Connectome Correlation and Downstream Analysis 
+To run parameter sensitivity to study different frame/train sizes:
+```console
+python hcp_atlas_to_atlas.py -s brainnetome -t power -task all --intrinsic true
+```
