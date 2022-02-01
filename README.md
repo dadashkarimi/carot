@@ -7,6 +7,11 @@ This is the repository for CAROT, ross Atlas Remapping via Optimal Transport. Al
 
 ![alt text](figs/ot.jpg)
 
+CAROT uses optimal transport theory, or the mathematics of converting a probability distribution from one set to another, to find an optimal mapping
+between two atlases that allows data processed from one atlas to be directly transformed into a connectome based on an
+unavailable atlas without needing raw data. CAROT is designed for functional connectomes based on functional magnetic
+imaging (fMRI) data. 
+
 ## Creating mappings 
 The main code to create mappings, connectomes in a desired atlas, and testing is available in `hcp_atlas_to_atlas.py`.
 The following arguments are needed to call the script:
