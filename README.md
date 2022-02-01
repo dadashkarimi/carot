@@ -27,9 +27,10 @@ The following arguments are needed to call the script:
 9. `-num_iters` or `--num_iters`: number of iterations in test
 10. `-save_model` or `--save_model`: (True or False)
 
+To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
 
 ```console
-javid@ycs:~$ python hcp_atlas_to_atlas.py -s brainnetome -t shen -task rest1 --save_model True -c euclidean
+python hcp_atlas_to_atlas.py -s brainnetome -t shen -task rest1 --save_model True -c euclidean
 ```
 
 
