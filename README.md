@@ -12,7 +12,7 @@ between two atlases that allows data processed from one atlas to be directly tra
 unavailable atlas without needing raw data. CAROT is designed for functional connectomes based on functional magnetic
 imaging (fMRI) data. 
 
-## Creating mappings 
+## Creating mappings and validating connectomes
 The main code to create mappings, connectomes in a desired atlas, and testing is available in `hcp_atlas_to_atlas.py`.
 The following arguments are needed to call the script:
 
@@ -46,3 +46,22 @@ To run parameter sensitivity to study different frame/train sizes:
 ```console
 python hcp_atlas_to_atlas.py -s brainnetome -t power -task all --intrinsic true
 ```
+
+## Sex classification on MDD dataset
+To train a classification model on `PNC` dataset and test on `MDD`we need to use script `pnc_atlas_to_atlas.py `:
+
+
+1. `-s` or `--source`: source atlas
+2. `-t` or `--target`: target atlas
+3. `-database` or `--database`: database (UCLA, PNC)
+4. `-g` or `--g`: mapping trained on HCP (rest1 or mean)
+5. `-sex_task` or `--sex_task`: which task we are training (rest1, nback, etc)
+6. `-num_iters` or `--num_iters`: number of iterations to train
+7. `-label` or `--label`: which label to train (sex, iq)
+8. `-site` or `--site`: which site we are testing (1,2,3,..,24)
+
+
+```console
+python pnc_atlas_to_atlas.py -s craddock -t shen -database ucla -sex_task 2 -g mean -model reg -num_iters 100 -label sex -site 1
+ ```
+
