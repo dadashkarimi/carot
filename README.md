@@ -33,7 +33,7 @@ Here, we want to calculate cost matrix between different ROIs in two atlases. Th
 ```console
 python build_cost_matrix.py -s craddock -t shen -task rest1
 ```
-The output will be stored in `G_source_target_task.csv` with `n` by `m` rows and columns indicating number of ROIs in source and target respectively. 
+The output will be stored in `cost_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. 
 
 ## 2. Finding mappings
 ## 3. Carot: Transforming source(s) to a target atlas
