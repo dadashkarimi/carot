@@ -43,6 +43,11 @@ python build_mapping.py -s craddock -t shen
 The output will be stored in `T_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. Each row is a probability distribution exhibiting optimum assignment of values from the appropriate node to target nodes.  
 
 ## 3. Carot: Transforming source(s) to a target atlas
+Given cost matrix `cost_source_target.csv` and mapping `T_source_target.csv` now we can transfer source parcellation into other:
+```console
+python atlas_remap.py -s craddock -t shen -c cost_source_target.csv -m T_source_target.csv
+``````
+# 4. Replicating results in the paper
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
 ```console
 python hcp_atlas_to_atlas.py -s brainnetome -t shen -task rest1 --save_model True -c euclidean
