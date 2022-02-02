@@ -47,7 +47,7 @@ Given cost matrix `cost_source_target.csv` and mapping `T_source_target.csv` now
 ```console
 python atlas_remap.py -s craddock -t shen -c cost_source_target.csv -m T_source_target.csv
 ``````
-# 4. Replicating results in the paper
+## Replicating results in the paper
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
 ```console
 python hcp_atlas_to_atlas.py -s brainnetome -t shen -task rest1 --save_model True -c euclidean
