@@ -27,6 +27,16 @@ The following arguments are needed to call the script:
 9. `-num_iters` or `--num_iters`: number of iterations in test
 10. `-save_model` or `--save_model`: (True or False)
 
+
+## 1. Building cost matrix
+Here, we want to calculate cost matrix between different ROIs in two atlases. Then, we have to specify the names of two atlases with `-s` and `-t` and the task we want to learn mappings with `-task` .
+```console
+python build_cost_matrix.py -s craddock -t shen -task rest1
+```
+The output will be stored in `G_source_target_task.csv` with `n` by `m` rows and columns indicating number of ROIs in source and target respectively. 
+
+## 2. Finding mappings
+## 3. Carot: Transforming source(s) to a target atlas
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
 ```console
 python hcp_atlas_to_atlas.py -s brainnetome -t shen -task rest1 --save_model True -c euclidean
