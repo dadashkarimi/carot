@@ -38,7 +38,7 @@ The output will be stored in `cost_source_target.csv` with `n` rows and`m` colum
 ## 2. Finding mappings
 Now, we can specify two atlases and the cost matrix derived from previous step to obtain optimal transport mapping between these two. 
 ```console
-python build_mapping.py -s craddock -t shen
+python build_mapping.py -s craddock -t shen -c cost_craddock_shen.csv
 ```
 The output will be stored in `T_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. Each row is a probability distribution exhibiting optimum assignment of values from the appropriate node to target nodes.  
 
