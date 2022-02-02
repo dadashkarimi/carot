@@ -45,7 +45,7 @@ The output will be stored in `T_source_target.csv` with `n` rows and`m` columns 
 ## 3. Carot: Transforming source(s) to a target atlas
 Given cost matrix `cost_source_target.csv` and mapping `T_source_target.csv` now we can transfer source parcellation into other:
 ```console
-python carot.py -s craddock -t shen -c cost_source_target.csv -m T_source_target.csv
+python carot.py -s craddock -t shen -m T_source_target.csv
 ``````
 ## Replicating results in the paper
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
