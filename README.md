@@ -36,6 +36,12 @@ python build_cost_matrix.py -s craddock -t shen -task rest1
 The output will be stored in `cost_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. 
 
 ## 2. Finding mappings
+Now, we can specify two atlases and the cost matrix derived from previous step to obtain optimal transport mapping between these two. 
+```console
+python build_mapping.py -s craddock -t shen -task rest1
+```
+The output will be stored in `T_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. Each row is a probability distribution exhibiting optimum assignment of values from the appropriate node to target nodes.  
+
 ## 3. Carot: Transforming source(s) to a target atlas
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
 ```console
