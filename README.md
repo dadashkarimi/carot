@@ -12,6 +12,9 @@ between two atlases that allows data processed from one atlas to be directly tra
 unavailable atlas without needing raw data. CAROT is designed for functional connectomes based on functional magnetic
 imaging (fMRI) data. 
 
+## Website
+We are happy to announce that we also launched carot website for demo: http://carotproject.com.
+
 ## Creating mappings and validating connectomes
 The main code to create mappings, connectomes in a desired atlas, and testing is available in `hcp_atlas_to_atlas.py`.
 The following arguments are needed to call the script:
