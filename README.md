@@ -34,21 +34,21 @@ The following arguments are needed to call the script:
 ## 1. Building cost matrix
 Here, we want to calculate cost matrix between different ROIs in two atlases. Then, we have to specify the names of two atlases with `-s` and `-t` and the task we want to learn mappings with `-task` .
 ```console
-python build_cost_matrix.py -s craddock.txt -t shen.txt
+python build_cost_matrix.py -s craddock -t shen
 ```
 The output will be stored in `cost_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. 
 
 ## 2. Finding mappings
 Now, we can specify two atlases and the cost matrix derived from previous step to obtain optimal transport mapping between these two. 
 ```console
-python build_mapping.py -s craddock.txt -t shen.txt -c cost_craddock_shen.csv
+python build_mapping.py -s craddock -t shen -c cost_craddock_shen.csv
 ```
 The output will be stored in `T_source_target.csv` with `n` rows and`m` columns indicating number of ROIs in source and target respectively. Each row is a probability distribution exhibiting optimum assignment of values from the appropriate node to target nodes.  
 
 ## 3. Carot: Transforming source(s) to a target atlas
 Given cost matrix `cost_source_target.csv` and mapping `T_source_target.csv` now we can transfer source parcellation into other:
 ```console
-python carot.py -s craddock.txt -t shen.txt -m T_source_target.csv
+python carot.py -s craddock -t shen -m T_source_target.csv
 ``````
 ## Replicating results in the paper
 To run a simple script with source `brainnetome` and target `shen` using `rest1` with `euclidean` cost measure, and saving it: 
