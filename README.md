@@ -5,7 +5,7 @@
 This is the repository for CAROT, ross Atlas Remapping via Optimal Transport. All the data including `mappings`, `intrinsic evluation`, and `downstream analysis` are in `data/` folder.
 
 
-![alt text](figs/ot.jpg)
+![alt text](figs/ot.png)
 
 CAROT uses optimal transport theory, or the mathematics of converting a probability distribution from one set to another, to find an optimal mapping
 between two atlases that allows data processed from one atlas to be directly transformed into a connectome based on an
