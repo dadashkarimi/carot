@@ -15,9 +15,33 @@ imaging (fMRI) data.
 ## Website: http://carotproject.com
 We are happy to announce that we also launched carot website for demo: http://carotproject.com. In rare cases if your wifi can't recognize the name check out the exact ip address: http://34.238.128.124
 
+## Requirements
+The main packages we have used to run the carot pipelines includes:
+1. `conda install -c conda-forge pot`
+2. `conda install -c conda-forge matplotlib`
+3. `conda install -c anaconda scikit-learn`
+4. `conda install -c anaconda h5py`
+5. `conda install -c anaconda scipy`
+6. `conda install -c conda-forge argparse`
+7. `conda install pandas`
+8. `pip install numpy`
+
+## Properties file
+To specify the location of different files you need to change `config.properties`:
+```
+[coord]
+shen=/data_dustin/store4/Templates/shen_coords.csv
+craddock=/data_dustin/store4/Templates/craddock_coords.csv
+power=/data_dustin/store4/Templates/power_coords.csv
+[path]
+shen=/data_dustin/store4/Templates/HCP/shen/rest1.mat
+craddock=/data_dustin/store4/Templates/HCP/craddock/rest1.mat
+power=/data_dustin/store4/Templates/HCP/power/rest1.mat
+
+```
+
 ## Creating mappings and validating connectomes
-The main code to create mappings, connectomes in a desired atlas, and testing is available in `hcp_atlas_to_atlas.py`.
-The following arguments are needed to call the script:
+These are the arguments we use for running our scripts:
 
 1. `-s` or `--source`: source atlas
 2. `-t` or `--target`: target atlas
