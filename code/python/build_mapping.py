@@ -67,16 +67,16 @@ import csv
 import os
 
 import numpy as np
-import torch; torch.manual_seed(0)
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.utils
-import torch.distributions
-import torchvision
 
 import sys
 
 import argparse
+import ConfigParser
+
+config = ConfigParser.RawConfigParser()
+config.read('config.properties')
+
+
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('-s','--source',type=str,help="source atlas")
@@ -111,137 +111,46 @@ def shuffle_list(l):
 
 
 
-atlases = ['dosenbach','schaefer','brainnetome','power','craddock','shen','shen368','craddock400']
-#atlases = ['dosenbach','schaefer','brainnetome','power','craddock','shen']
-#atlases = ['dosenbach','power','shen']
-#atlases = ['power','shen']
-#atlases = ['power','shen']
-#atlases = ['shen368','craddock400']
-#atlases = ['dosenbach','schaefer','brainnetome','power','craddock','shen368','craddock400']
 atlases = ['dosenbach','schaefer','brainnetome','power','shen','craddock']
-#atlases = ['shen','schaefer']
 atlases = shuffle_list(atlases)
-#tasks = ["gambling","wm","motor","lang","social","relational","emotion","rest1"]
-#tasks = ["gambling","wm","motor","lang"]
-#tasks = ["social","relational","emotion","rest1"]
-#tasks = ["gambling","wm"]#,"motor","lang","social","relational","emotion","rest1"]
-#tasks = ["social","relational"]
-#tasks = ["gambling","wm","motor","lang","emotion","rest1"]
-tasks = ["rest1","gambling","wm","motor","lang","social","relational","emotion"]
+tasks = ["rest1"]#,"gambling","wm","motor","lang","social","relational","emotion"]
 tasks = shuffle_list(tasks)
 
 
-path = '/data_dustin/store4/Templates/HCP'
 
 coord = {}
 all_data = {}
-coord['schaefer'] =pd.read_csv('/data_dustin/store4/Templates/schaefer_coords.csv', sep=',',header=None)
-coord['brainnetome'] =pd.read_csv('/data_dustin/store4/Templates/brainnetome_coords.csv', sep=',',header=None)
-coord['shen'] =pd.read_csv('/data_dustin/store4/Templates/shen_coords.csv', sep=',',header=None)
-coord['shen368'] =pd.read_csv('/data_dustin/store4/Templates/shen_368_coords.csv', sep=',',header=None)
-coord['power'] =pd.read_csv('/data_dustin/store4/Templates/power_coords.txt', sep=',',header=None)
-coord['dosenbach'] =pd.read_csv('/data_dustin/store4/Templates/dosenbach_coords.txt', sep=',',header=None)
-coord['craddock'] =pd.read_csv('/data_dustin/store4/Templates/craddock_coords.txt', sep=',',header=None)
-coord['craddock400'] =pd.read_csv('/data_dustin/store4/Templates/craddock_400_coords.txt', sep=',',header=None)
 
 # Loading Atlas ...
 tasks = [args.task]
 atlases = [args.source,args.target] 
 
+dataset_path = {}
+for atlas in tqdm(atlases,desc = 'Loading config file ..'):
+    dataset_path[atlas]=config.get('path',atlas)
+    coord[atlas]= pd.read_csv(config.get('coord',atlas), sep=',',header=None)
+
+
 for atlas in tqdm(atlases,desc = 'Loading Atlases ..'):
     zero_nodes = set()
+    data = sio.loadmat(dataset_path[atlas])
 
     for task in tasks:
-        data = sio.loadmat(os.path.join(path,atlas,task+'.mat'))
         x = data['all_mats']
         idx = np.argwhere(np.all(x[..., :] == 0, axis=0))
         p = [p1  for (p1,p2) in idx]
         zero_nodes.update(p)
 
     for task in tasks:
-        data = sio.loadmat(os.path.join(path,atlas,task+'.mat'))
         x = data['all_mats']
         print(atlas,task,x.shape)
         np.delete(x,list(zero_nodes),1)
         all_data[(atlas,task)] = x
 
 
-all_behav = genfromtxt('data/268/all_behav.csv', delimiter=',')
-all_sex = genfromtxt('data/268/gender.csv', delimiter=',')
 
-
-class Decoder(nn.Module):
-    def __init__(self,p1,p2, latent_dims):
-        super(Decoder, self).__init__()
-        self.linear1 = nn.Linear(latent_dims, 512)
-        self.linear2 = nn.Linear(512, p1*p2)
-        self.p1 = p1
-        self.p2 = p2
-
-    def forward(self, z):
-        z = F.relu(self.linear1(z))
-        z = torch.sigmoid(self.linear2(z))
-        return z#.reshape((-1, 1, self.p1, self.p2))
-
-class Encoder(nn.Module):
-    def __init__(self, p1,p2,latent_dims):
-        super(Encoder, self).__init__()
-        self.linear1 = nn.Linear(p1*p2, 512)
-        self.linear2 = nn.Linear(512, latent_dims)
-        self.linear3 = nn.Linear(512, latent_dims)
-
-        self.N = torch.distributions.Normal(0, 1)
-        self.N.loc = self.N.loc#.cuda() # hack to get sampling on the GPU
-        self.N.scale = self.N.scale#.cuda()
-        self.kl = 0
-
-    def forward(self, x):
-        x = torch.flatten(x, start_dim=1)
-        x = F.relu(self.linear1(x))
-        mu =  self.linear2(x)
-        sigma = torch.exp(self.linear3(x))
-        z = mu + sigma*self.N.sample(mu.shape)
-        self.kl = (sigma**2 + mu**2 - torch.log(sigma) - 1/2).sum()
-        return z
-
-class VAE(nn.Module):
-    def __init__(self,p1=200,p2=268,latent_dims=2):
-        super(VAE, self).__init__()
-        self.encoder = Encoder(p1,p2,latent_dims)
-        self.decoder = Decoder(p1,p2,latent_dims)
-
-    def forward(self, x):
-        z = self.encoder(x)
-        return self.decoder(z)
-
-def train(autoencoder, source,target, T, epochs=40):
-    print(source,target)
-    print(T.shape)
-    opt = torch.optim.Adam(autoencoder.parameters())
-    p1 = T.shape[0]
-    p2 = T.shape[1]
-    TEST_FREQUENCY = 5
-    train_elbo = []
-    num_tasks = T.shape[0]
-    for epoch in range(epochs):
-        y = T
-        y = y.reshape(1,p1*p2) # GPU
-        opt.zero_grad()
-        y[y<0.001] = 0
-        y_hat = autoencoder(y)
-        loss = ((y - y_hat)**2).sum()
-        #cos = nn.CosineSimilarity(dim=1, eps=1e-6)
-        #loss   = cos(y,y_hat)
-        if torch.isnan(loss):
-            return autoencoder,T
-        train_elbo.append(loss)
-        loss.backward()
-        opt.step()
-
-        if epoch % TEST_FREQUENCY == 0:
-            print("[epoch %03d] average test loss: %.4f" % (epoch, float(sum(train_elbo)/len(train_elbo))))
-            train_elbo = []
-    return autoencoder,y_hat.reshape(p1,p2)
+all_behav = genfromtxt(config.get('behavior','iq'), delimiter=',')
+all_sex = genfromtxt(config.get('behavior','gender'), delimiter=',')
 
 
 def evaluate_vae(svi, test_loader, use_cuda=False):
@@ -391,8 +300,9 @@ def sinkhorn(source,target,train_index,task,frame_size):
     p1 =all_data[(source,task)].shape[1] 
     p2 =all_data[(target,task)].shape[1] 
     num_time_points = t
+    
 
-
+    lambd = 0.1
     train_size = len(train_index)
 
 
@@ -405,7 +315,6 @@ def sinkhorn(source,target,train_index,task,frame_size):
         M1 = ot.dist(coord[source],coord[target],metric='euclidean')
         M1 = (M1 - np.min(M1))/np.ptp(M1)
         
-        lambd = 0.001
         M2 = np.zeros((p1,p2))
         for i in train_index:
             a = all_data[(source,task)][i,:,:]
@@ -419,7 +328,7 @@ def sinkhorn(source,target,train_index,task,frame_size):
         M = args.lamda*M1 + (1-args.lamda)*M2
 
     elif args.cost == "euclidean":
-        lambd = 0.01
+        lambd = 0.1
         M = ot.dist(coord[source],coord[target],metric='euclidean')
         if args.k>0:
             T = np.ones((M.shape[0],M.shape[1]))#+1e-6
@@ -430,7 +339,7 @@ def sinkhorn(source,target,train_index,task,frame_size):
         M = (M - np.min(M))/np.ptp(M)
 
     elif args.cost == "functional" or args.cost == "vae":
-        lambd = 0.001
+        lambd = 0.1
         M = np.zeros((p1,p2))
         for i in train_index:
             a = all_data[(source,task)][i,:,:]
@@ -447,11 +356,11 @@ def sinkhorn(source,target,train_index,task,frame_size):
         for i in train_index:
             a = all_data[(source,task)][i,:,j]
             b = all_data[(target,task)][i,:,j]
-            a = normalize(a) + 1e-6
-            b = normalize(b) + 1e-6
+            a = normalize(a) + 1e-5
+            b = normalize(b) + 1e-5
             a = a/np.sum(a)
             b = b/np.sum(b)
-            T = ot.sinkhorn(a, b, M,lambd,verbose=False)#,lambd,numItermax=2000,verbose=False,method = "sinkhorn")
+            T = ot.sinkhorn(a, b, M,0.5,verbose=False)#,lambd,numItermax=2000,verbose=False,method = "sinkhorn")
             T = T/T.sum(axis=0,keepdims=1)
             if args.cost == "vae":
                 T_first_run.append(T)

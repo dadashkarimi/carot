@@ -67,16 +67,16 @@ import csv
 import os
 
 import numpy as np
-import torch; torch.manual_seed(0)
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.utils
-import torch.distributions
-import torchvision
 
 import sys
 
 import argparse
+import ConfigParser
+
+config = ConfigParser.RawConfigParser()
+config.read('config.properties')
+
+
 
 def dir_path(path):
     if os.path.isdir(path):
@@ -103,43 +103,40 @@ def shuffle_list(l):
 
 
 
-atlases = ['dosenbach','schaefer','brainnetome','power','craddock','shen','shen368','craddock400']
 atlases = ['dosenbach','schaefer','brainnetome','power','shen','craddock']
 atlases = shuffle_list(atlases)
 tasks = ["rest1","gambling","wm","motor","lang","social","relational","emotion"]
 tasks = shuffle_list(tasks)
 
 
-path = '/data_dustin/store4/Templates/HCP'
 
 coord = {}
 all_data = {}
-coord['schaefer'] =pd.read_csv('/data_dustin/store4/Templates/schaefer_coords.csv', sep=',',header=None)
-coord['brainnetome'] =pd.read_csv('/data_dustin/store4/Templates/brainnetome_coords.csv', sep=',',header=None)
-coord['shen'] =pd.read_csv('/data_dustin/store4/Templates/shen_coords.csv', sep=',',header=None)
-coord['shen368'] =pd.read_csv('/data_dustin/store4/Templates/shen_368_coords.csv', sep=',',header=None)
-coord['power'] =pd.read_csv('/data_dustin/store4/Templates/power_coords.txt', sep=',',header=None)
-coord['dosenbach'] =pd.read_csv('/data_dustin/store4/Templates/dosenbach_coords.txt', sep=',',header=None)
-coord['craddock'] =pd.read_csv('/data_dustin/store4/Templates/craddock_coords.txt', sep=',',header=None)
-coord['craddock400'] =pd.read_csv('/data_dustin/store4/Templates/craddock_400_coords.txt', sep=',',header=None)
 
 # Loading Atlas ...
 tasks = [args.task]
 atlases = [args.source,args.target] 
 
+dataset_path = {}
+for atlas in tqdm(atlases,desc = 'Loading config file ..'):
+    dataset_path[atlas]=config.get('path',atlas)
+    coord[atlas]= pd.read_csv(config.get('coord',atlas), sep=',',header=None)
+
+
+
 for atlas in tqdm(atlases,desc = 'Loading Atlases ..'):
     zero_nodes = set()
 
+    data = sio.loadmat(dataset_path[atlas])
     for task in tasks:
-        data = sio.loadmat(os.path.join(path,atlas,task+'.mat'))
         x = data['all_mats']
         idx = np.argwhere(np.all(x[..., :] == 0, axis=0))
         p = [p1  for (p1,p2) in idx]
         zero_nodes.update(p)
 
     for task in tasks:
-        data = sio.loadmat(os.path.join(path,atlas,task+'.mat'))
         x = data['all_mats']
+        np.savetxt(atlas+".csv",x[0,:,:],delimiter=",")
         print(atlas,task,x.shape)
         np.delete(x,list(zero_nodes),1)
         all_data[(atlas,task)] = x
@@ -246,7 +243,4 @@ if __name__ == "__main__":
     G, test_time_series_pred = atlas_ot(source,target,task)
     data = {"data":test_time_series_pred}
     sio.savemat("time_series_"+target+"_ot.mat",data)
-    #df = pd.DataFrame(test_time_series_pred)
-    #df = pd.Panel().to_frame(),stacj().reset_index()#DataFrame(test_time_series_pred)
-    #df.to_csv("time_series_"+target+"_ot.csv")
 
