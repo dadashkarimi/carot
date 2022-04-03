@@ -28,7 +28,7 @@ The main packages we have used to run the carot pipelines includes:
 
 ## Properties file
 To specify the location of different files you need to change `config.properties`:
-```
+```console
 [coord]
 shen=/data_dustin/store4/Templates/shen_coords.csv
 craddock=/data_dustin/store4/Templates/craddock_coords.csv
