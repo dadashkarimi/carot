@@ -113,3 +113,13 @@ To train a classification model on `PNC` dataset and test on `MDD`we need to use
 python pnc_atlas_to_atlas.py -s craddock -t shen -database ucla -sex_task 2 -g mean -model reg -num_iters 100 -label sex -site 1
  ```
 
+```
+@article{dadashkarimi2023cross,
+  title={Cross Atlas Remapping via Optimal Transport (CAROT): Creating connectomes for different atlases when raw data is not available},
+  author={Dadashkarimi, Javid and Karbasi, Amin and Liang, Qinghao and Rosenblatt, Matthew and Noble, Stephanie and Foster, Maya and Rodriguez, Raimundo and Adkinson, Brendan and Ye, Jean and Sun, Huili and others},
+  journal={Medical Image Analysis},
+  pages={102864},
+  year={2023},
+  publisher={Elsevier}
+}
+```
